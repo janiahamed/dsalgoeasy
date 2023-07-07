@@ -16,33 +16,85 @@ Input: s = "(]"
 Output: false
 */
 
-/* JAVA */
-class Solution {
-    public boolean isValid(String s) {
-        HashMap <Character,Character> hm = new HashMap<>();
-        hm.put('}','{');
-        hm.put(')','(');
-        hm.put(']','[');
-        
-        Stack<Character> st = new Stack<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (!hm.containsKey(s.charAt(i))) {
-                st.push(s.charAt(i));
-            } else {
-                Character popped;
-                if (st.isEmpty()) {
-                    popped = '#';
-                } else {
-                    popped = st.pop();
-                }
-                if (popped != hm.get(s.charAt(i))) return false;
-            }
-        }
-        return st.isEmpty();
-    }
-}
+
           
 /* C */
+
+typedef struct stack_s {
+    int top;
+    int arr[10000];
+}stack_t;
+
+stack_t st;
+
+int mapping[3][2] = {
+    {']','['},
+    {'}','{'},
+    {')','('}
+};
+
+void push(int element) {
+    st.arr[++st.top] = element;
+}
+
+int pop() {
+    if(st.top == -1) return -1;
+    else {
+        return st.arr[st.top--];    
+    }
+}
+
+bool isValid(char * s){
+    int i = 0;
+    int j = 0;
+    st.top = -1;
+    
+    for (i = 0; i < strlen(s); i++ ) {
+        int flag = 0;
+        int matched = 0;
+        int original = s[i];
+        printf("\nHere original = %d",original);
+        for (j = 0; j < 3; j++) {
+            printf("\nTHere, mapping is: %d",mapping[j][0]);
+            if (mapping[j][0] == original) {
+                flag = 0;
+                printf("\nWHere");
+                int expected = mapping[j][1];
+                int popped;
+                if (st.top == -1) {
+                    printf("\nWhat");
+                    popped = -1;
+                } else {
+                    printf("\nWhy");
+                    popped = pop();
+                    printf("\npopped = %d expected = %d",popped, expected);
+                    flag = 0;
+                    matched = 1;
+                }
+                if (popped != expected) {
+                    printf("\nWhen");
+                    return false;
+                }
+            } else {
+                flag = 1;
+            }
+        }
+        if (flag == 1 && matched == 0) {
+            printf("\nHow");
+            push(s[i]);
+            flag = 0;
+        }
+
+    }
+    if (st.top == -1) {
+        printf("\nWhich");
+        return true;
+    }
+    printf("\nWhose");
+    return false;
+}
+
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,4 +179,30 @@ int main() {
     printf("Is valid: %s\n", result ? "true" : "false");
 
     return 0;
+}
+
+/* JAVA */
+class Solution {
+    public boolean isValid(String s) {
+        HashMap <Character,Character> hm = new HashMap<>();
+        hm.put('}','{');
+        hm.put(')','(');
+        hm.put(']','[');
+        
+        Stack<Character> st = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!hm.containsKey(s.charAt(i))) {
+                st.push(s.charAt(i));
+            } else {
+                Character popped;
+                if (st.isEmpty()) {
+                    popped = '#';
+                } else {
+                    popped = st.pop();
+                }
+                if (popped != hm.get(s.charAt(i))) return false;
+            }
+        }
+        return st.isEmpty();
+    }
 }
