@@ -53,26 +53,19 @@ bool isValid(char * s){
         int flag = 0;
         int matched = 0;
         int original = s[i];
-        printf("\nHere original = %d",original);
         for (j = 0; j < 3; j++) {
-            printf("\nTHere, mapping is: %d",mapping[j][0]);
             if (mapping[j][0] == original) {
                 flag = 0;
-                printf("\nWHere");
                 int expected = mapping[j][1];
                 int popped;
                 if (st.top == -1) {
-                    printf("\nWhat");
                     popped = -1;
                 } else {
-                    printf("\nWhy");
                     popped = pop();
-                    printf("\npopped = %d expected = %d",popped, expected);
                     flag = 0;
                     matched = 1;
                 }
                 if (popped != expected) {
-                    printf("\nWhen");
                     return false;
                 }
             } else {
@@ -80,17 +73,14 @@ bool isValid(char * s){
             }
         }
         if (flag == 1 && matched == 0) {
-            printf("\nHow");
             push(s[i]);
             flag = 0;
         }
 
     }
     if (st.top == -1) {
-        printf("\nWhich");
         return true;
     }
-    printf("\nWhose");
     return false;
 }
 
