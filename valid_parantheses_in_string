@@ -1,0 +1,130 @@
+/*
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+An input string is valid if:
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+*/
+/*
+Input: s = "()"
+Output: true
+
+Input: s = "()[]{}"
+Output: true
+
+Input: s = "(]"
+Output: false
+*/
+
+/* JAVA */
+class Solution {
+    public boolean isValid(String s) {
+        HashMap <Character,Character> hm = new HashMap<>();
+        hm.put('}','{');
+        hm.put(')','(');
+        hm.put(']','[');
+        
+        Stack<Character> st = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!hm.containsKey(s.charAt(i))) {
+                st.push(s.charAt(i));
+            } else {
+                Character popped;
+                if (st.isEmpty()) {
+                    popped = '#';
+                } else {
+                    popped = st.pop();
+                }
+                if (popped != hm.get(s.charAt(i))) return false;
+            }
+        }
+        return st.isEmpty();
+    }
+}
+          
+/* C */
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+// Structure to represent stack
+typedef struct {
+    char* arr;
+    int top;
+    int capacity;
+} Stack;
+
+// Function to create a stack
+Stack* createStack(int capacity) {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->arr = (char*)malloc(sizeof(char) * capacity);
+    stack->top = -1;
+    stack->capacity = capacity;
+    return stack;
+}
+
+// Function to check if the stack is empty
+bool isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(Stack* stack, char c) {
+    stack->arr[++stack->top] = c;
+}
+
+// Function to pop an element from the stack
+char pop(Stack* stack) {
+    if (isEmpty(stack))
+        return '\0';  // Return null character if the stack is empty
+    return stack->arr[stack->top--];
+}
+
+// Function to check if the input string has valid parentheses
+bool isValid(char* s) {
+    int len = strlen(s);
+    Stack* stack = createStack(len);
+
+    // HashMap equivalent in C using switch-case
+    char hashMap[3][2] = {{'}', '{'}, {')', '('}, {']', '['}};
+
+    for (int i = 0; i < len; i++) {
+        char currChar = s[i];
+        int j;
+
+        // Check if the current character is a closing bracket
+        bool isClosingBracket = false;
+        for (j = 0; j < 3; j++) {
+            if (currChar == hashMap[j][0]) {
+                isClosingBracket = true;
+                break;
+            }
+        }
+
+        if (isClosingBracket) {
+            char popped = pop(stack);
+            if (popped != hashMap[j][1]) {
+                // Mismatched opening bracket
+                free(stack->arr);
+                free(stack);
+                return false;
+            }
+        } else {
+            push(stack, currChar);
+        }
+    }
+
+    bool isValid = isEmpty(stack);
+    free(stack->arr);
+    free(stack);
+    return isValid;
+}
+
+int main() {
+    char* str = "{[()]}";
+    bool result = isValid(str);
+    printf("Is valid: %s\n", result ? "true" : "false");
+
+    return 0;
+}
