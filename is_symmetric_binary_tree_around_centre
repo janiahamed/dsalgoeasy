@@ -1,0 +1,66 @@
+/*
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+*/
+/*
+Input: root = [1,2,2,3,4,4,3]
+Output: true
+Input: root = [1,2,2,null,3,null,3]
+Output: false
+*/
+
+/* C */
+bool isSymmetric(struct TreeNode* root){
+ if (root == NULL) {
+        return true;
+    }
+    
+    struct TreeNode* stack[200];
+    int top = -1;
+    stack[++top] = root;
+    stack[++top] = root;
+    
+    while (top >= 0) {
+        struct TreeNode* left = stack[top--];
+        struct TreeNode* right = stack[top--];
+        
+        if (left == NULL && right == NULL) {
+            continue;
+        }
+        
+        if (left == NULL || right == NULL) {
+            return false;
+        }
+        
+        if (left->val != right->val) {
+            return false;
+        }
+        
+        stack[++top] = left->left;
+        stack[++top] = right->right;
+        stack[++top] = left->right;
+        stack[++top] = right->left;
+    }
+    
+    return true;
+}
+
+/* JAVA */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        Stack<TreeNode> st = new Stack<TreeNode>();
+        st.push(root);
+        st.push(root);
+        while (!st.isEmpty()) {
+            TreeNode left = st.pop();
+            TreeNode right = st.pop();
+            if (left == null && right == null) continue;
+            if (left == null || right == null) return false;
+            if (left.val != right.val) return false;
+            st.push(left.left);
+            st.push(right.right);
+            st.push(left.right);
+            st.push(right.left);
+        }
+        return true;
+    }
+}
